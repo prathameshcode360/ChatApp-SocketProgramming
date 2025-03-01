@@ -2,6 +2,8 @@ import express from "express";
 import { Server } from "socket.io";
 import http from "http";
 import cors from "cors";
+import { connectToDB } from "./mongoose.config.js";
+import chatModel from "./chat.scheamas.js";
 
 const app = express();
 // 1.creating server
@@ -29,6 +31,12 @@ io.on("connection", (socket) => {
       message: message,
     };
 
+    const newChat = new chatModel({
+      userName: socket.userName,
+      message: message,
+      timeStamp: new Date(),
+    });
+    newChat.save();
     socket.broadcast.emit("broadcast_message", userMessage);
   });
   socket.on("disconnect", () => {
@@ -38,4 +46,5 @@ io.on("connection", (socket) => {
 
 server.listen(4001, () => {
   console.log("server is running on port 4001");
+  connectToDB();
 });
