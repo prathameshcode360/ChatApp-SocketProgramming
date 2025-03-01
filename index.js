@@ -2,7 +2,6 @@ import express from "express";
 import { Server } from "socket.io";
 import http from "http";
 import cors from "cors";
-import { Socket } from "dgram";
 
 const app = express();
 // 1.creating server
@@ -19,6 +18,9 @@ const io = new Server(server, {
 // 3.use socket event
 io.on("connection", (socket) => {
   console.log("user connected");
+  socket.on("new_message", (message) => {
+    socket.broadcast.emit("broadcast_message", message);
+  });
   socket.on("disconnect", () => {
     console.log("user disconnected");
   });
