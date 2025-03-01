@@ -34,6 +34,16 @@
           messageInput.value = "";
         }
       });
+
+      // display message on UI
+      socket.on("old_messages", (data) => {
+        data.messages.forEach((message) => {
+          const messageElement = document.createElement("div");
+          messageElement.innerText = message.userName + ":" + message.message;
+          messageList.appendChild(messageElement);
+        });
+      });
+
       // listen for brodcosted messages
       socket.on("broadcast_message", (userMessage) => {
         const messageElement = document.createElement("div");

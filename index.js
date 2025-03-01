@@ -4,6 +4,7 @@ import http from "http";
 import cors from "cors";
 import { connectToDB } from "./mongoose.config.js";
 import chatModel from "./chat.scheamas.js";
+import { error } from "console";
 
 const app = express();
 // 1.creating server
@@ -23,6 +24,17 @@ io.on("connection", (socket) => {
 
   socket.on("join", (data) => {
     socket.userName = data.userName;
+    // send old messages
+    chatModel
+      .find()
+      .sort({ timeStamp: 1 })
+      .limit(50)
+      .then((messages) => {
+        socket.emit("old_messages", { messages: messages });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   });
 
   socket.on("new_message", (message) => {
