@@ -18,8 +18,18 @@ const io = new Server(server, {
 // 3.use socket event
 io.on("connection", (socket) => {
   console.log("user connected");
+
+  socket.on("join", (data) => {
+    socket.userName = data.userName;
+  });
+
   socket.on("new_message", (message) => {
-    socket.broadcast.emit("broadcast_message", message);
+    let userMessage = {
+      userName: socket.userName,
+      message: message,
+    };
+
+    socket.broadcast.emit("broadcast_message", userMessage);
   });
   socket.on("disconnect", () => {
     console.log("user disconnected");
