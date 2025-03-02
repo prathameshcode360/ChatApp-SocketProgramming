@@ -51,6 +51,16 @@
           messageInput.value = "";
         }
       });
+
+      // display old message on UI
+      socket.on("old_messages", (data) => {
+        data.messages.forEach((message) => {
+          const messageElement = document.createElement("div");
+          messageElement.innerText = message.username + ":" + message.message;
+          messageList.appendChild(messageElement);
+        });
+      });
+
       socket.on("broadcast-message", (userMessage) => {
         // Create a new div element to display the message
         const messageElement = document.createElement("div");

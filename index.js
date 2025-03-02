@@ -27,6 +27,18 @@ io.on("connection", (socket) => {
   socket.on("join", (data) => {
     console.log(data);
     socket.username = data.username;
+
+    // Send old messages after user joins
+    chatModel
+      .find()
+      .sort({ timeStamp: 1 })
+      .limit(50)
+      .then((messages) => {
+        socket.emit("old_messages", { messages: messages });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   });
 
   // Listen for "new-message" event from the client
