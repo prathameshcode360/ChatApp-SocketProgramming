@@ -47,6 +47,13 @@
           messageInput.value = "";
         }
       });
+      socket.on("broadcast-message", (message) => {
+        // Create a new div element to display the message
+        const messageElement = document.createElement("div");
+        messageElement.innerText = message;
+        // Append the message to the message list
+        messageList.appendChild(messageElement);
+      });
     </script>
   </body>
 </html>
