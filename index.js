@@ -21,11 +21,24 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log("User Connected");
 
+  // recieve username
+  socket.on("join", (data) => {
+    console.log(data);
+    socket.username = data.username;
+  });
+
   // Listen for "new-message" event from the client
   socket.on("new-message", (message) => {
     console.log("Received message:", message);
+
+    // attach username with the message
+    let userMessage = {
+      username: socket.username,
+      message: message,
+    };
+
     // broadcast message to all clients
-    socket.broadcast.emit("broadcast-message", message);
+    socket.broadcast.emit("broadcast-message", userMessage);
   });
 
   // Handle client disconnection

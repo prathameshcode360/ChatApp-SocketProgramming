@@ -23,6 +23,10 @@
       // Establish a WebSocket connection to the server
       const socket = io.connect("http://localhost:4002");
 
+      // taking username from prompt
+      const username = prompt("Enter Your Name");
+      socket.emit("join", { username: username });
+
       // Select UI elements
       const messageList = document.querySelector(".message-list");
       const messageInput = document.getElementById("message-input");
@@ -38,7 +42,7 @@
 
           // Create a new div element to display the message
           const messageElement = document.createElement("div");
-          messageElement.innerText = message;
+          messageElement.innerText = username + ":" + message;
 
           // Append the message to the message list
           messageList.appendChild(messageElement);
@@ -47,10 +51,11 @@
           messageInput.value = "";
         }
       });
-      socket.on("broadcast-message", (message) => {
+      socket.on("broadcast-message", (userMessage) => {
         // Create a new div element to display the message
         const messageElement = document.createElement("div");
-        messageElement.innerText = message;
+        messageElement.innerText =
+          userMessage.username + ":" + userMessage.message;
         // Append the message to the message list
         messageList.appendChild(messageElement);
       });
