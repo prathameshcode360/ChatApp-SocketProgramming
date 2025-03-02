@@ -1,14 +1,15 @@
 import express from "express";
-import { Server } from "socket.io";
 import http from "http";
+import { Server } from "socket.io";
 import cors from "cors";
-import { Socket } from "dgram";
 
+// Initialize an Express application
 const app = express();
-// 1.creating server
+
+// Create an HTTP server using Express
 const server = http.createServer(app);
 
-// 2.creating socket server
+// Initialize a Socket.io server with CORS configuration
 const io = new Server(server, {
   cors: {
     origin: "*",
@@ -16,14 +17,16 @@ const io = new Server(server, {
   },
 });
 
-// 3.use socket event
+// Handle client connection and disconnection events
 io.on("connection", (socket) => {
-  console.log("user connected");
+  console.log("User Connected");
+
   socket.on("disconnect", () => {
-    console.log("user disconnected");
+    console.log("User Disconnected");
   });
 });
 
-server.listen(4001, () => {
-  console.log("server is running on port 4001");
+// Start the server and listen on port 4002
+server.listen(4002, () => {
+  console.log("Server is listening on port 4002");
 });
