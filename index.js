@@ -2,6 +2,8 @@ import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
+import connetctToDB from "./mongoose.config.js";
+import chatModel from "./chat.scheams.js";
 
 // Initialize an Express application
 const app = express();
@@ -36,6 +38,13 @@ io.on("connection", (socket) => {
       username: socket.username,
       message: message,
     };
+    // saving chat into database
+    const newChat = new chatModel({
+      username: socket.username,
+      message: message,
+      time: new Date(),
+    });
+    newChat.save();
 
     // broadcast message to all clients
     socket.broadcast.emit("broadcast-message", userMessage);
@@ -50,4 +59,5 @@ io.on("connection", (socket) => {
 // Start the server and listen on port 4002
 server.listen(4002, () => {
   console.log("Server is listening on port 4002");
+  connetctToDB();
 });
