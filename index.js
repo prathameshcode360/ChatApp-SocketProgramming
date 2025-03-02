@@ -6,14 +6,14 @@ import cors from "cors";
 // Initialize an Express application
 const app = express();
 
-// Create an HTTP server using Express
+// Create an HTTP server using the Express app
 const server = http.createServer(app);
 
 // Initialize a Socket.io server with CORS configuration
 const io = new Server(server, {
   cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
+    origin: "*", // Allow requests from any origin
+    methods: ["GET", "POST"], // Allow only GET and POST requests
   },
 });
 
@@ -21,6 +21,12 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log("User Connected");
 
+  // Listen for "new-message" event from the client
+  socket.on("new-message", (message) => {
+    console.log("Received message:", message);
+  });
+
+  // Handle client disconnection
   socket.on("disconnect", () => {
     console.log("User Disconnected");
   });
